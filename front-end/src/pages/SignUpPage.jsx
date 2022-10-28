@@ -3,17 +3,18 @@ import { useToken } from "../auth/useToken";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 
-const LogInPage = () => {
+const SignUpPage = () => {
   const [emailValue, setEmailValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
+  const [confirmPasswordValue, setConfirmPasswordValue] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   const [token, setToken] = useToken();
 
   const history = useHistory();
 
-  const onLogIn = async () => {
-    const response = await axios.post("/api/login", {
+  const onSignup = async () => {
+    const response = await axios.post("/api/signup", {
       email: emailValue,
       password: passwordValue,
     });
@@ -23,7 +24,7 @@ const LogInPage = () => {
   };
   return (
     <div className="bg-white p-5 rounded-lg">
-      <h1>Log In</h1>
+      <h1>Sign up</h1>
       {errorMessage && <div className="fail">{errorMessage}</div>}
       <input
         value={emailValue}
@@ -37,16 +38,27 @@ const LogInPage = () => {
         type="password"
         placeholder="Password"
       />
+      <input
+        value={confirmPasswordValue}
+        onChange={(e) => setConfirmPasswordValue(e.target.value)}
+        type="password"
+        placeholder="Confirm Password"
+      />
       <hr />
-      <button onClick={onLogIn} disabled={!emailValue || !passwordValue}>
-        Login
+      <button
+        onClick={onSignup}
+        disabled={
+          !emailValue ||
+          !passwordValue ||
+          passwordValue !== confirmPasswordValue
+        }
+      >
+        Sign up
       </button>
-      <button onClick={() => history.push("/forgot-password")}>
-        Forgot password?
-      </button>
-      <button onClick={() => history.push("/signup")}>Sign up</button>
+
+      <button onClick={() => history.push("/login")}>Log in</button>
     </div>
   );
 };
 
-export default LogInPage;
+export default SignUpPage;
